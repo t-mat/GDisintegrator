@@ -1,5 +1,6 @@
 // Geometry disintegrator effect
 // https://github.com/keijiro/GDisintegrator
+#define STUDY_EFFECT 1
 
 #include "Common.cginc"
 #include "UnityGBuffer.cginc"
@@ -26,6 +27,14 @@ half _Metallic2;
 
 // Dynamic properties
 float4 _EffectVector;
+
+#if STUDY_EFFECT
+float _DisableAllFancyEffects;
+float _DisableRingEffect;
+float _DisableTriangleScatteringEffect;
+float _RingEffectProbability;
+float _TriangleEffectProbability;
+#endif
 
 // Vertex input attributes
 struct Attributes
@@ -144,10 +153,18 @@ void Geometry(
     // Draw nothing at the end of deformation.
     if (param >= 1) return;
 
+#if STUDY_EFFECT
+    if(_DisableAllFancyEffects >= 0.5f) return;
+#endif
+
     // Choose ring/triangle randomly.
     uint seed = pid * 877;
     if (Random(seed) < 0.05)
     {
+#if STUDY_EFFECT
+        if(_DisableRingEffect >= 0.5f) return;
+        if(! (Random(seed) < 0.05 * _RingEffectProbability)) return;
+#endif
         // Construct the tangent space
         float3 tx = normalize(n0 + n1 + n2);
         float3 ty = normalize(cross(RandomVector(seed + 1), tx));
@@ -195,6 +212,10 @@ void Geometry(
     }
     else
     {
+#if STUDY_EFFECT
+        if(_DisableTriangleScatteringEffect >= 0.5f) return;
+        if(! (Random(seed) < _TriangleEffectProbability)) return;
+#endif
         // -- Triangle fx --
         // Simple scattering animation
 

@@ -20,11 +20,17 @@ class Disintegrator : MonoBehaviour
         BackToFront,
     }
 
+    public bool     DisableSpecialEffects = false;
+    public bool     DisableRingEffect = false;
+    public bool     DisableTriangleScatteringEffect = false;
+
     public Direction direction = Direction.LeftToRight;
 
     public bool     UseDistance = false;
 
     [Range(-2.0f, 2.0f)] public float Distance = 0.0f;
+    [Range( 0.0f, 1.0f)] public float RingEffectProbability = 1.0f;
+    [Range( 0.0f, 1.0f)] public float TriangleEffectProbability = 1.0f;
 
     void Update_study() {
         Vector3 fwd;
@@ -42,6 +48,11 @@ class Disintegrator : MonoBehaviour
         var vector = new Vector4(fwd.x, fwd.y, fwd.z, dist);
 
         _sheet.SetVector("_EffectVector", vector);
+        _sheet.SetFloat("_DisableAllFancyEffects", DisableSpecialEffects ? 1.0f : 0.0f);
+        _sheet.SetFloat("_DisableRingEffect", DisableRingEffect ? 1.0f : 0.0f);
+        _sheet.SetFloat("_DisableTriangleScatteringEffect", DisableTriangleScatteringEffect ? 1.0f : 0.0f);
+        _sheet.SetFloat("_RingEffectProbability", RingEffectProbability);
+        _sheet.SetFloat("_TriangleEffectProbability", TriangleEffectProbability);
     }
 #endif
 
