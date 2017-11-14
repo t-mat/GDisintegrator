@@ -617,6 +617,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _linkedRenderers:
   - {fileID: 890591893}
+  DisableSpecialEffects: 0
+  DisableRingEffect: 0
+  DisableTriangleScatteringEffect: 0
+  direction: 1
+  UseDistance: 0
+  Distance: -0.9
+  RingEffectProbability: 1
+  TriangleEffectProbability: 1
 --- !u!4 &1132161667
 Transform:
   m_ObjectHideFlags: 0
