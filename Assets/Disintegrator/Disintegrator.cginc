@@ -34,6 +34,8 @@ float _DisableRingEffect;
 float _DisableTriangleScatteringEffect;
 float _RingEffectProbability;
 float _TriangleEffectProbability;
+float _TriangleEffectSpeed;
+float _TriangleEffectRotationSpeed;
 #endif
 
 // Vertex input attributes
@@ -224,9 +226,15 @@ void Geometry(
 
         // Random motion
         float3 move = RandomVector(seed + 1) * ss_param * 0.5;
+#if STUDY_EFFECT
+        move *= _TriangleEffectSpeed;
+#endif
 
         // Random rotation
         float3 rot_angles = (RandomVector01(seed + 1) - 0.5) * 100;
+#if STUDY_EFFECT
+        rot_angles *= _TriangleEffectRotationSpeed;
+#endif
         float3x3 rot_m = Euler3x3(rot_angles * ss_param);
 
         // Simple shrink
