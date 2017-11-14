@@ -1,3 +1,4 @@
+#define STUDY_EFFECT
 using UnityEngine;
 using UnityEngine.Timeline;
 using System.Collections.Generic;
@@ -11,6 +12,38 @@ class Disintegrator : MonoBehaviour
 
     // Only used in Editor
     Mesh _gridMesh;
+
+#if STUDY_EFFECT
+    public enum Direction {
+        LeftToRight,
+        BottomToTop,
+        BackToFront,
+    }
+
+    public Direction direction = Direction.LeftToRight;
+
+    public bool     UseDistance = false;
+
+    [Range(-2.0f, 2.0f)] public float Distance = 0.0f;
+
+    void Update_study() {
+        Vector3 fwd;
+        switch(direction) {
+        default:
+        case Direction.LeftToRight: fwd = Vector3.right;    break;
+        case Direction.BottomToTop: fwd = Vector3.up;       break;
+        case Direction.BackToFront: fwd = Vector3.forward;  break;
+        }
+
+        var dist = transform.position.y;
+        if(UseDistance) {
+            dist = Distance;
+        }
+        var vector = new Vector4(fwd.x, fwd.y, fwd.z, dist);
+
+        _sheet.SetVector("_EffectVector", vector);
+    }
+#endif
 
     void OnDestroy()
     {
@@ -32,7 +65,9 @@ class Disintegrator : MonoBehaviour
         var vector = new Vector4(fwd.x, fwd.y, fwd.z, dist);
 
         _sheet.SetVector("_EffectVector", vector);
-
+#if STUDY_EFFECT
+        Update_study();
+#endif
         foreach (var r in _linkedRenderers) r.SetPropertyBlock(_sheet);
     }
 
